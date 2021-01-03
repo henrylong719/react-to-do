@@ -2,8 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const app = express();
-
-const todos = require('./routes/todos');
+const todoRoutes = require('./routes/todoRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
 const connectDB = require('./config/db');
 const morgan = require('morgan');
 
@@ -14,7 +14,8 @@ connectDB();
 // allow use to use body parser
 app.use(express.json());
 
-app.use('/api/v1/todos', todos);
+app.use('/api/v1/todos', todoRoutes);
+app.use('/api/v1/users', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 
@@ -22,14 +23,14 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static('client/build'));
 
-  // serve the index.html file
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-  );
-}
+//   // serve the index.html file
+//   app.get('*', (req, res) =>
+//     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+//   );
+// }
 
 app.listen(
   PORT,

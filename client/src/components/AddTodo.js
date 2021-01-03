@@ -5,34 +5,41 @@ import { GlobalContext } from '../context/GlobalState';
 export const AddTodo = () => {
   const [title, setTitle] = useState('');
 
-  const { addTodo } = useContext(GlobalContext);
+  const { addTodo, user } = useContext(GlobalContext);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const newTodo = {
-      title,
-      completed: false,
-    };
+    if (title) {
+      const newTodo = {
+        title,
+        completed: false,
+      };
 
-    addTodo(newTodo);
-
-    setTitle('');
+      addTodo(newTodo, user);
+      setTitle('');
+    }
   };
 
+  // console.log(success);
+
   return (
-    <form style={{ display: 'flex' }} onSubmit={onSubmit}>
+    <form className="d-flex" onSubmit={onSubmit}>
       <input
         type="text"
         name="title"
-        placeholder="Add to do..."
+        placeholder=" Add to do..."
         value={title}
         style={{ flex: 10 }}
         onChange={(e) => {
           setTitle(e.target.value);
         }}
       ></input>
-      <input type="submit" style={{ flex: 1 }} className="btn"></input>
+      <input
+        type="submit"
+        style={{ flex: 1 }}
+        className="btn btn-dark "
+      ></input>
     </form>
   );
 };

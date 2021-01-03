@@ -1,16 +1,15 @@
-const Todo = require('../models/Todo');
+const Todo = require('../models/todoModel.js');
 
 // $desc   Get all todos
-// @route  GET /api/v1/todos
+// @route  GET /api/v1/mytodos
 // @access Public
 
-exports.getTodos = async (req, res, next) => {
+exports.getMyTodos = async (req, res, next) => {
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ user: req.user._id });
 
     return res.status(200).json({
       success: true,
-      count: todos.length,
       data: todos,
     });
   } catch (err) {
@@ -29,7 +28,10 @@ exports.addTodos = async (req, res, next) => {
   try {
     const { title } = req.body;
 
-    const todo = await Todo.create(req.body);
+    const todo = await Todo.create({
+      title,
+      user: req.user.id,
+    });
 
     return res.status(201).json({
       success: true,
@@ -71,7 +73,6 @@ exports.deleteTodos = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      data: {},
     });
   } catch (err) {
     return res.status(500).json({
@@ -103,6 +104,51 @@ exports.updateTodos = async (req, res, next) => {
     });
   }
 };
+
+// $desc   Get all todos
+// @route  GET /api/v1/todos
+// @access Public
+
+exports.getAllTodos = async (req, res) => {
+  try {
+    const pageSize = 10;
+
+    const page = Number(req.query.pageNumber) || 1;
+
+    const count = await Todo.countDocuments({});
+
+    const todos = await Todo.find({})
+      .populate('user ', 'id name')
+      .limit(pageSize)
+      .skip((page - 1) * pageSize);
+
+    return res
+      .status(200)
+      .json({ todos, page, pages: Math.ceil(count / pageSize) });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server error',
+    });
+  }
+};
+
+// $desc get logged in user's todos
+// @route GET/api.v1/todos/mytodos
+
+// exports.getMyTodos = async (req, res, next) => {
+//   try {
+//     const todos = await Todo.find({ user: req.user._id });
+
+//     return res.json(todos);
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       error: 'Server error',
+//     });
+//   }
+// };
+
 /******************* test *******************/
 
 // $desc   Get all todos

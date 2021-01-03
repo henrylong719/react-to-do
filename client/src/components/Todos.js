@@ -1,20 +1,32 @@
 import React, { useContext, useEffect } from 'react';
 import { TodoItem } from './TodoItem';
+import { Row, Col, Container } from 'react-bootstrap';
 
 import { GlobalContext } from '../context/GlobalState';
 
 export const Todos = () => {
-  const { todos, getTodos } = useContext(GlobalContext);
+  const { todos, getMyTodos, user } = useContext(GlobalContext);
 
   useEffect(() => {
-    getTodos();
-  }, [getTodos]);
+    if (!todos) {
+      getMyTodos(user);
+    }
+  }, [getMyTodos, user, todos]);
 
   return (
     <div>
-      {todos.map((todo) => (
-        <TodoItem todo={todo} key={todo._id} />
-      ))}
+      {/* {console.log(todos)} */}
+
+      <Container fluid>
+        <Row className="no-gutters">
+          {todos &&
+            todos.map((todo) => (
+              <Col key={todo._id} sm={12} md={6} lg={4} xl={3}>
+                <TodoItem todo={todo} />
+              </Col>
+            ))}
+        </Row>
+      </Container>
     </div>
   );
 };

@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import Header from '../components/Layout/Header';
 
-const About = () => {
-  return <div>This is the about page</div>;
+import { GlobalContext } from '../context/GlobalState';
+
+const About = ({ history }) => {
+  const { user } = useContext(GlobalContext);
+
+  return (
+    <>
+      <Header user={user} history={history} />
+      This is the about page
+    </>
+  );
 };
 
 export default About;

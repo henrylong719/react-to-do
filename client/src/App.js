@@ -1,27 +1,53 @@
 import React from 'react';
 import './App.css';
-import { Todos } from './components/Todos';
-import { AddTodo } from './components/AddTodo';
-import Header from './components/Layout/Header';
-
+import TodoScreen from './pages/TodoScreen';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import { GlobalProvider } from './context/GlobalState';
+import Profile from './pages/Profile';
+import UserListScreen from './pages/UserListScreen';
+import TodoListScreen from './pages/TodoListScreen';
+import UserEditScreen from './pages/UserEditScreen';
 
-class App extends React.Component {
-  render() {
-    return (
+const App = () => {
+  return (
+    <Router>
       <GlobalProvider>
-        <div className="App">
-          <div className="container">
+        <main>
+          <div className="App">
             <div>
-              <Header />
-              <AddTodo />
-              <Todos />
+              <Route exact path="/" component={TodoScreen}></Route>
             </div>
           </div>
-        </div>
+          <Route path="/profile" exact component={Profile}></Route>
+
+          <Route path="/login" exact component={Login}></Route>
+
+          <Route path="/register" exact component={Register}></Route>
+          <Route
+            path="/admin/userlist"
+            exact
+            component={UserListScreen}
+          ></Route>
+
+          <Route
+            path="/admin/todolist"
+            exact
+            component={TodoListScreen}
+          ></Route>
+
+          <Route
+            path="/admin/todolist/:pageNumber"
+            exact
+            component={TodoListScreen}
+          ></Route>
+
+          <Route path="/admin/user/:id/edit" component={UserEditScreen}></Route>
+        </main>
       </GlobalProvider>
-    );
-  }
-}
+    </Router>
+  );
+};
 
 export default App;
